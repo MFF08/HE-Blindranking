@@ -1,1 +1,288 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blindranking – Helmstedt & Lehrkräfte</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Blindranking-Spiel: Lehrkräfte (ohne Vornamen, mit Anrede) und Orte in Helmstedt." />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Blindranking</h1>
+    <p class="subtitle">Lehrkräfte (ohne Vornamen) und Orte in Helmstedt</p>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <label for="category">Kategorie</label>
+      <select id="category" aria-label="Kategorie auswählen"></select>
+
+      <label for="seed">Seed (optional)</label>
+      <input id="seed" type="text" placeholder="z. B. HS-2026-A" />
+
+      <button id="startBtn" class="primary">Runde starten</button>
+    </section>
+
+    <section id="gameSection" class="game hidden" aria-live="polite">
+      <div class="status-bar">
+        <div id="progress">Item 0/5</div>
+        <div id="time"></div>
+      </div>
+
+      <div class="current-item">
+        <div id="itemCard" class="card">Klicke „Runde starten“</div>
+      </div>
+
+      <div class="slots">
+        <div class="slot" data-index="0" tabindex="0" aria-label="Platz 1"><span class="slot-label">1</span><div class="slot-item"></div></div>
+        <div class="slot" data-index="1" tabindex="0" aria-label="Platz 2"><span class="slot-label">2</span><div class="slot-item"></div></div>
+        <div class="slot" data-index="2" tabindex="0" aria-label="Platz 3"><span class="slot-label">3</span><div class="slot-item"></div></div>
+        <div class="slot" data-index="3" tabindex="0" aria-label="Platz 4"><span class="slot-label">4</span><div class="slot-item"></div></div>
+        <div class="slot" data-index="4" tabindex="0" aria-label="Platz 5"><span class="slot-label">5</span><div class="slot-item"></div></div>
+      </div>
+
+      <div class="actions">
+        <button id="placeSkip" class="secondary">Überspringen</button>
+        <button id="resetRound" class="secondary">Neu starten</button>
+      </div>
+    </section>
+
+    <section id="resultSection" class="results hidden">
+      <h2>Dein Ranking</h2>
+      <ol id="resultList" class="result-list"></ol>
+      <div class="share">
+        <label for="shareLink">Teilen (Seed-Link)</label>
+        <input id="shareLink" type="text" readonly />
+        <button id="copyLink" class="secondary">Link kopieren</button>
+      </div>
+      <button id="playAgain" class="primary">Neue Runde</button>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <small>Nur persönliches Ranking – keine Referenz- oder Community-Wertung. Kategorien getrennt (keine Mischungen).</small>
+  </footer>
+
+  <script>
+  function seededRandom(seed) {
+    let s = 1;
+    for (let i = 0; i < seed.length; i++) {
+      s = (s * 31 + seed.charCodeAt(i)) % 2147483647;
+    }
+    return () => {
+      s = (s * 48271) % 2147483647;
+      return s / 2147483647;
+    };
+  }
+  function seededShuffle(array, seed) {
+    const rand = seededRandom(seed);
+    const arr = array.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  const qs = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
+
+  const state = {
+    categories: [],
+    currentCategory: null,
+    seed: "",
+    items: [],
+    index: 0,
+    slots: [null, null, null, null, null],
+    startTime: 0,
+    finished: false
+  };
+
+  const categorySelect = qs('#category');
+  const seedInput = qs('#seed');
+  const startBtn = qs('#startBtn');
+  const gameSection = qs('#gameSection');
+  const resultSection = qs('#resultSection');
+  const itemCard = qs('#itemCard');
+  const slotsEls = qsa('.slot');
+  const progressEl = qs('#progress');
+  const timeEl = qs('#time');
+  const resultList = qs('#resultList');
+  const shareLink = qs('#shareLink');
+  const copyLinkBtn = qs('#copyLink');
+  const playAgainBtn = qs('#playAgain');
+  const placeSkipBtn = qs('#placeSkip');
+  const resetRoundBtn = qs('#resetRound');
+
+  async function loadCategories() {
+    const res = await fetch('data/categories.json', {cache: 'no-store'});
+    if (!res.ok) {
+      alert('Konnte Kategorien nicht laden.');
+      return;
+    }
+    const data = await res.json();
+    state.categories = data.categories || [];
+    categorySelect.innerHTML = '';
+    state.categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.title;
+      categorySelect.appendChild(opt);
+    });
+
+    const url = new URL(window.location.href);
+    const catParam = url.searchParams.get('cat');
+    const seedParam = url.searchParams.get('seed');
+    if (catParam && state.categories.some(c => c.id === catParam)) {
+      categorySelect.value = catParam;
+    }
+    if (seedParam) seedInput.value = seedParam;
+  }
+
+  function startRound() {
+    const catId = categorySelect.value;
+    const cat = state.categories.find(c => c.id === catId);
+    if (!cat) {
+      alert('Bitte eine Kategorie wählen.');
+      return;
+    }
+    const seed = seedInput.value.trim() || (catId + '-' + Date.now());
+    state.currentCategory = cat;
+    state.seed = seed;
+
+    const shuffled = seededShuffle(cat.items, seed);
+    state.items = shuffled.slice(0, 5);
+    state.index = 0;
+    state.slots = [null, null, null, null, null];
+    state.finished = false;
+    state.startTime = performance.now();
+
+    itemCard.textContent = 'Bereit…';
+    qsa('.slot-item').forEach(el => el.textContent = '');
+    updateProgress();
+    gameSection.classList.remove('hidden');
+    resultSection.classList.add('hidden');
+
+    showNextItem();
+    updateShareLink();
+  }
+
+  function updateShareLink() {
+    const url = new URL(window.location.href);
+    url.searchParams.set('cat', state.currentCategory.id);
+    url.searchParams.set('seed', state.seed);
+    shareLink.value = url.toString();
+  }
+
+  function updateProgress() {
+    progressEl.textContent = `Item ${Math.min(state.index, 5)}/5`;
+    if (!state.finished) {
+      const elapsed = (performance.now() - state.startTime) / 1000;
+      timeEl.textContent = `Zeit: ${elapsed.toFixed(1)}s`;
+    }
+  }
+
+  function showNextItem() {
+    if (state.index >= state.items.length) {
+      finishRound();
+      return;
+    }
+    const item = state.items[state.index];
+    itemCard.textContent = item.label;
+    itemCard.dataset.key = item.key;
+    updateProgress();
+  }
+
+  function placeInSlot(slotIndex) {
+    if (state.finished) return;
+    if (state.index >= state.items.length) return;
+
+    const item = state.items[state.index];
+    const currentPos = state.slots.findIndex(x => x && x.key === item.key);
+
+    if (currentPos === slotIndex) {
+    } else if (state.slots[slotIndex] == null) {
+      state.slots[slotIndex] = item;
+      qsa('.slot-item')[slotIndex].textContent = item.label;
+      state.index++;
+    } else {
+      const temp = state.slots[slotIndex];
+      state.slots[slotIndex] = item;
+      qsa('.slot-item')[slotIndex].textContent = item.label;
+
+      if (currentPos >= 0) {
+        state.slots[currentPos] = temp;
+        qsa('.slot-item')[currentPos].textContent = temp.label;
+        state.index++;
+      } else {
+        state.items[state.index] = temp;
+      }
+    }
+
+    if (state.index < 5) {
+      showNextItem();
+    } else {
+      finishRound();
+    }
+  }
+
+  function skipPlacement() {
+    const item = state.items[state.index];
+    const freeIndex = state.slots.findIndex(x => x == null);
+    if (freeIndex >= 0) {
+      state.slots[freeIndex] = item;
+      qsa('.slot-item')[freeIndex].textContent = item.label;
+      state.index++;
+      if (state.index < 5) showNextItem(); else finishRound();
+    } else {
+      placeInSlot(4);
+    }
+  }
+
+  function finishRound() {
+    state.finished = true;
+    const elapsed = (performance.now() - state.startTime) / 1000;
+    timeEl.textContent = `Zeit: ${elapsed.toFixed(1)}s`;
+    renderResults();
+    gameSection.classList.add('hidden');
+    resultSection.classList.remove('hidden');
+  }
+
+  function renderResults() {
+    resultList.innerHTML = '';
+    state.slots.forEach((item, idx) => {
+      const li = document.createElement('li');
+      li.textContent = item ? `${idx + 1}. ${item.label}` : `${idx + 1}. –`;
+      resultList.appendChild(li);
+    });
+  }
+
+  startBtn.addEventListener('click', startRound);
+  playAgainBtn.addEventListener('click', () => startRound());
+  copyLinkBtn.addEventListener('click', async () => {
+    shareLink.select();
+    try {
+      await navigator.clipboard.writeText(shareLink.value);
+      copyLinkBtn.textContent = 'Kopiert!';
+      setTimeout(() => copyLinkBtn.textContent = 'Link kopieren', 1500);
+    } catch {
+      document.execCommand('copy');
+    }
+  });
+  placeSkipBtn.addEventListener('click', skipPlacement);
+  resetRoundBtn.addEventListener('click', startRound);
+  qsa('.slot').forEach(el => {
+    el.addEventListener('click', () => placeInSlot(Number(el.dataset.index)));
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        placeInSlot(Number(el.dataset.index));
+      }
+    });
+  });
+
+  loadCategories();
+  </script>
+</body>
+</html>
 
