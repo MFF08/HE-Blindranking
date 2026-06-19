@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blindranking – Helmstedt & Lehrkräfte</title>
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Blindranking-Spiel: Lehrkräfte (ohne Vornamen, mit Anrede) und Orte in Helmstedt." />
+  <meta name="description" content="Blindranking-Spiel: Lehrkräfte und Orte in Helmstedt." />
 </head>
 <body>
   <header class="app-header">
@@ -15,11 +15,8 @@
 
   <main class="container">
     <section class="controls" role="region" aria-label="Einstellungen">
-      <div class="control-group">
-        <label for="category">Kategorie</label>
-        <select id="category" required aria-label="Kategorie auswählen">
-          <!-- wird per JS befüllt -->
-        </select>
+      <div class="tabs" id="categoryTabs" role="tablist" aria-label="Kategorien">
+        <!-- Buttons werden per JS erzeugt -->
       </div>
 
       <div class="control-group">
@@ -69,7 +66,7 @@
   </main>
 
   <footer class="app-footer">
-    <small>Nur persönliches Ranking – keine Referenz- oder Community-Wertung. Kategorien getrennt (keine Mischungen).</small>
+    <small>Nur persönliches Ranking – keine Referenz-/Community-Wertung. Kategorien getrennt.</small>
   </footer>
 
   <script src="app.js" defer></script>
