@@ -1,96 +1,155 @@
-{
-  "categories": [
-    {
-      "id": "lehrkraefte_v1",
-      "title": "Lehrkräfte",
-      "items": [
-        { "key": "adali", "label": "Frau Adali" },
-        { "key": "arnemann", "label": "Frau Arnemann" },
-        { "key": "bartel", "label": "Herr Bartel" },
-        { "key": "behrendt", "label": "Frau Behrendt" },
-        { "key": "brammer", "label": "Frau Brammer" },
-        { "key": "dalchow", "label": "Frau Dalchow" },
-        { "key": "deneke", "label": "Frau Deneke" },
-        { "key": "distler", "label": "Frau Distler" },
-        { "key": "egerer", "label": "Frau Egerer" },
-        { "key": "friede", "label": "Frau Friede" },
-        { "key": "gfoeller", "label": "Frau Gföller" },
-        { "key": "gerlach", "label": "Herr Gerlach" },
-        { "key": "glasenapp", "label": "Herr Glasenapp" },
-        { "key": "gosemann", "label": "Herr Gosemann" },
-        { "key": "haberlah", "label": "Herr Haberlah" },
-        { "key": "helms", "label": "Frau Helms" },
-        { "key": "kramer", "label": "Herr Kramer" },
-        { "key": "krueger", "label": "Frau Krüger" },
-        { "key": "kobilke", "label": "Herr Kobilke" },
-        { "key": "luedeke", "label": "Frau Lüdeke" },
-        { "key": "maxim", "label": "Frau Maxim" },
-        { "key": "muessiger", "label": "Herr Müssiger" },
-        { "key": "neuschulz", "label": "Frau Neuschulz" },
-        { "key": "nimmerrichter", "label": "Frau Nimmerrichter" },
-        { "key": "pahlke", "label": "Herr Pahlke" },
-        { "key": "rammelt", "label": "Herr Rammelt" },
-        { "key": "rasper", "label": "Herr Rasper" },
-        { "key": "reitemeyer", "label": "Frau Reitemeyer" },
-        { "key": "roettger", "label": "Frau Röttger" },
-        { "key": "rybicki", "label": "Herr Rybicki" },
-        { "key": "scharnboeck", "label": "Herr Scharnböck" },
-        { "key": "siekmann", "label": "Frau Siekmann" },
-        { "key": "stucki", "label": "Frau Stucki" },
-        { "key": "tiesler", "label": "Frau Tiesler" },
-        { "key": "vanderhorst", "label": "Frau van der Horst" },
-        { "key": "voelcke", "label": "Frau Völcke" },
-        { "key": "walburg", "label": "Herr Walburg" },
-        { "key": "walther", "label": "Frau Walther" },
-        { "key": "wendt", "label": "Frau Wendt" },
-        { "key": "wittwer", "label": "Frau Wittwer" },
-        { "key": "zetzl", "label": "Frau Zetzl" },
-        { "key": "zechmann", "label": "Frau Zechmann" }
-      ]
-    },
-    {
-      "id": "orte_helmstedt_v1",
-      "title": "Orte in Helmstedt",
-      "items": [
-        { "key": "holzberg", "label": "Holzberg (Einkaufsstraße)" },
-        { "key": "kaufland", "label": "Kaufland (Helmstedt)" },
-        { "key": "groepern", "label": "Gröpern (Innenstadt/Platz)" },
-        { "key": "eq", "label": "EQ" },
-        { "key": "marktplatz", "label": "Marktplatz" },
-        { "key": "juleum", "label": "Juleum (Alte Universität)" },
-        { "key": "kloster_marienberg", "label": "Kloster St. Marienberg" },
-        { "key": "brunnentheater", "label": "Brunnentheater" },
-        { "key": "zonengrenz_museum", "label": "Zonengrenz‑Museum" },
-        { "key": "buecherei", "label": "Stadtbücherei" },
-        { "key": "stadtpark", "label": "Stadtpark" },
-        { "key": "lappwaldsee", "label": "Lappwaldsee" },
-        { "key": "zob", "label": "ZOB (Busbahnhof)" },
-        { "key": "bahnhof", "label": "Bahnhof Helmstedt" },
-        { "key": "rathausplatz", "label": "Rathausplatz" },
-        { "key": "holzbergpassage", "label": "Holzbergpassage" },
-        { "key": "edeka", "label": "Edeka (Helmstedt)" },
-        { "key": "netto", "label": "Netto (Helmstedt)" },
-        { "key": "spielplatz_stadtpark", "label": "Spielplatz am Stadtpark" },
-        { "key": "skatepark", "label": "Skatepark" },
-        { "key": "freibad", "label": "Freibad" },
-        { "key": "st_ludgeri", "label": "Stiftskirche St. Ludgeri" },
-        { "key": "walpurgiskirche", "label": "Walpurgiskirche" },
-        { "key": "groepernstrasse", "label": "Gröpernstraße" },
-        { "key": "kornstrasse", "label": "Kornstraße" },
-        { "key": "collegienstrasse", "label": "Collegienstraße" },
-        { "key": "neumaerker_strasse", "label": "Neumärker Straße" },
-        { "key": "kybitzstrasse", "label": "Kybitzstraße" },
-        { "key": "stobenstrasse", "label": "Stobenstraße" },
-        { "key": "conringstrasse", "label": "Conringstraße" },
-        { "key": "juliusstrasse", "label": "Juliusstraße" },
-        { "key": "schuetzenwall", "label": "Schützenwall" },
-        { "key": "papenberg", "label": "Papenberg" },
-        { "key": "emmerstedter_strasse", "label": "Emmerstedter Straße" },
-        { "key": "harsleber_tor", "label": "Harsleber Tor / -straße" },
-        { "key": "magdeburger_tor", "label": "Magdeburger Tor" },
-        { "key": "magdeburger_berg", "label": "Magdeburger Berg" },
-        { "key": "kaetchenstrasse", "label": "Kätchenstraße" }
-      ]
-    }
-  ]
+// Utilities
+function seededRandom(seed) {
+  let s = 1;
+  for (let i = 0; i < seed.length; i++) {
+    s = (s * 31 + seed.charCodeAt(i)) % 2147483647;
+  }
+  return () => {
+    s = (s * 48271) % 2147483647;
+    return s / 2147483647;
+  };
 }
+function seededShuffle(array, seed) {
+  const rand = seededRandom(seed);
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+const qs = s => document.querySelector(s);
+const qsa = s => Array.from(document.querySelectorAll(s));
+
+// State
+const state = {
+  categories: [],
+  currentCategory: null,
+  seed: "",
+  items: [],
+  index: 0,
+  slots: [null, null, null, null, null],
+  startTime: 0,
+  finished: false
+};
+
+// Refs
+const tabsWrap = qs('#categoryTabs');
+const seedInput = qs('#seed');
+const startBtn = qs('#startBtn');
+const gameSection = qs('#gameSection');
+const resultSection = qs('#resultSection');
+const itemCard = qs('#itemCard');
+const progressEl = qs('#progress');
+const timeEl = qs('#time');
+const resultList = qs('#resultList');
+const shareLink = qs('#shareLink');
+const copyLinkBtn = qs('#copyLink');
+const playAgainBtn = qs('#playAgain');
+const placeSkipBtn = qs('#placeSkip');
+const resetRoundBtn = qs('#resetRound');
+
+// Load categories and build tabs
+async function loadCategories() {
+  try {
+    const res = await fetch('data/categories.json', {cache: 'no-store'});
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    state.categories = Array.isArray(data.categories) ? data.categories : [];
+
+    // Build tab buttons
+    tabsWrap.innerHTML = '';
+    state.categories.forEach((cat, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab-btn';
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', 'false');
+      btn.dataset.catId = cat.id;
+      btn.textContent = cat.title;
+      btn.addEventListener('click', () => selectCategory(cat.id));
+      tabsWrap.appendChild(btn);
+    });
+
+    // URL params
+    const url = new URL(window.location.href);
+    const catParam = url.searchParams.get('cat');
+    const seedParam = url.searchParams.get('seed');
+
+    if (catParam && state.categories.some(c => c.id === catParam)) {
+      selectCategory(catParam);
+    } else if (state.categories[0]) {
+      // optional: erste Kategorie vorwählen
+      selectCategory(state.categories[0].id);
+    }
+    if (seedParam) seedInput.value = seedParam;
+  } catch (e) {
+    console.error(e);
+    alert('Kategorien konnten nicht geladen werden. Prüfe data/categories.json.');
+  }
+}
+
+function selectCategory(catId) {
+  const cat = state.categories.find(c => c.id === catId);
+  if (!cat) return;
+  state.currentCategory = cat;
+
+  // Visual active
+  qsa('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.catId === catId)));
+
+  // Update share link if seed present
+  if (state.seed) updateShareLink();
+}
+
+function startRound() {
+  if (!state.currentCategory) {
+    alert('Bitte zuerst eine Kategorie auswählen.');
+    return;
+  }
+  const seed = seedInput.value.trim() || (state.currentCategory.id + '-' + Date.now());
+  state.seed = seed;
+
+  const shuffled = seededShuffle(state.currentCategory.items, seed);
+  state.items = shuffled.slice(0, 5);
+  state.index = 0;
+  state.slots = [null, null, null, null, null];
+  state.finished = false;
+  state.startTime = performance.now();
+
+  itemCard.textContent = 'Bereit…';
+  qsa('.slot-item').forEach(el => el.textContent = '');
+  updateProgress();
+  gameSection.classList.remove('hidden');
+  resultSection.classList.add('hidden');
+
+  showNextItem();
+  updateShareLink();
+}
+
+function updateShareLink() {
+  const url = new URL(window.location.href);
+  url.searchParams.set('cat', state.currentCategory.id);
+  url.searchParams.set('seed', state.seed);
+  shareLink.value = url.toString();
+}
+
+function updateProgress() {
+  progressEl.textContent = `Item ${Math.min(state.index, 5)}/5`;
+  if (!state.finished) {
+    const elapsed = (performance.now() - state.startTime) / 1000;
+    timeEl.textContent = `Zeit: ${elapsed.toFixed(1)}s`;
+  }
+}
+
+function showNextItem() {
+  if (state.index >= state.items.length) {
+    finishRound();
+    return;
+  }
+  const item = state.items[state.index];
+  itemCard.textContent = item.label;
+  itemCard.dataset.key = item.key;
+  updateProgress();
+}
+
+function placeInSlot(slotIndex) {
+  if (state.finished) return
