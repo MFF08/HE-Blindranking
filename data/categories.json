@@ -91,6 +91,88 @@
         { "key": "magdeburger_berg", "label": "Magdeburger Berg" },
         { "key": "kaetchenstrasse", "label": "Kätchenstraße" }
       ]
+    },
+    {
+      "id": "verschwoerungstheorie_v1",
+      "title": "Verschwörungstheorie",
+      "items": [
+        { "key": "chemtrails", "label": "Chemtrails" },
+        { "key": "flatearth", "label": "Flache Erde" },
+        { "key": "reptiloiden", "label": "Reptiloiden" },
+        { "key": "impfchip", "label": "„Impf-Chip“" },
+        { "key": "5g", "label": "5G als Gefahr" },
+        { "key": "mondlandung_fake", "label": "Mondlandung ist Fake" },
+        { "key": "qanon", "label": "QAnon" }
+      ]
+    },
+    {
+      "id": "politiker_v1",
+      "title": "Politiker",
+      "items": [
+        { "key": "merkel", "label": "Angela Merkel" },
+        { "key": "scholz", "label": "Olaf Scholz" },
+        { "key": "baerbock", "label": "Annalena Baerbock" },
+        { "key": "habeck", "label": "Robert Habeck" },
+        { "key": "lindner", "label": "Christian Lindner" },
+        { "key": "weidel", "label": "Alice Weidel" },
+        { "key": "wagenknecht", "label": "Sahra Wagenknecht" }
+      ]
+    },
+    {
+      "id": "schulfaecher_gaboe_v1",
+      "title": "Schulfächer am GaBö",
+      "items": [
+        { "key": "deutsch", "label": "Deutsch" },
+        { "key": "englisch", "label": "Englisch" },
+        { "key": "mathe", "label": "Mathematik" },
+        { "key": "bio", "label": "Biologie" },
+        { "key": "chemie", "label": "Chemie" },
+        { "key": "physik", "label": "Physik" },
+        { "key": "geschichte", "label": "Geschichte" },
+        { "key": "powi", "label": "Politik/Wirtschaft" },
+        { "key": "erdkunde", "label": "Erdkunde" },
+        { "key": "kunst", "label": "Kunst" },
+        { "key": "musik", "label": "Musik" },
+        { "key": "sport", "label": "Sport" },
+        { "key": "informatik", "label": "Informatik" },
+        { "key": "franz", "label": "Französisch" },
+        { "key": "latein", "label": "Latein" }
+      ]
+    },
+    {
+      "id": "helmstedter_schulen_v1",
+      "title": "Helmstedter Schulen",
+      "items": [
+        { "key": "gaboe", "label": "Gymnasium am Bötschenberg (GaBö)" },
+        { "key": "johanneum", "label": "Gymnasium Johanneum" },
+        { "key": "igs", "label": "IGS Helmstedt" },
+        { "key": "bbs", "label": "BBS Helmstedt" },
+        { "key": "grundschule_1", "label": "Grundschule (Beispiel 1)" },
+        { "key": "grundschule_2", "label": "Grundschule (Beispiel 2)" }
+      ]
+    },
+    {
+      "id": "parteien_v1",
+      "title": "Parteien",
+      "items": [
+        { "key": "cdu", "label": "CDU" },
+        { "key": "spd", "label": "SPD" },
+        { "key": "gruene", "label": "Bündnis 90/Die Grünen" },
+        { "key": "fdp", "label": "FDP" },
+        { "key": "linke", "label": "Die Linke" },
+        { "key": "afd", "label": "AfD" },
+        { "key": "bsw", "label": "BSW" },
+        { "key": "freie_waehler", "label": "Freie Wähler" }
+      ]
     }
   ]
+}
+
+
+
+
+
+
+
+    
 }
