@@ -29,14 +29,14 @@ body{
 }
 .hidden{display:none}
 
-/* Controls */
+/* Controls Layout */
 .controls{
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
+  grid-template-columns: 2fr 2fr 1fr;
   gap: 12px;
   align-items: end;
 }
@@ -47,7 +47,7 @@ body{
   min-width: 0;
 }
 .controls label{font-size: 0.9rem; color: var(--muted)}
-.controls input, .controls button{
+.controls input, .controls select, .controls button{
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
@@ -55,6 +55,11 @@ body{
   background: var(--card);
   color: var(--text);
 }
+.controls select{
+  appearance: none;
+  cursor: pointer;
+}
+.control-start{align-self: end}
 .controls .primary{
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   border: none;
@@ -64,25 +69,6 @@ body{
 }
 .controls .primary:hover{filter: brightness(1.05)}
 
-/* Tabs */
-.tabs{
-  display:flex; flex-wrap: wrap; gap: 8px;
-}
-.tab-btn{
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 10px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.tab-btn[aria-selected="true"]{
-  background: var(--card);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(34,211,238,0.15) inset;
-}
-
-/* Game */
 .game{
   margin-top: 16px;
   background: var(--panel);
@@ -166,17 +152,21 @@ body{
   margin-top: 10px;
 }
 
-/* Responsive */
+/* Responsive Fix: Button überdeckt keine Felder */
 @media (max-width: 900px){
   .controls{
     grid-template-columns: 1fr 1fr;
   }
-  .control-start{grid-column: 1 / -1}
+  .control-start{
+    grid-column: 1 / -1;
+  }
 }
 @media (max-width: 560px){
   .controls{
     grid-template-columns: 1fr;
   }
-  .control-start{grid-column: 1 / -1}
+  .control-start{
+    grid-column: 1 / -1;
+  }
   .slots{grid-template-columns: 1fr;}
 }
