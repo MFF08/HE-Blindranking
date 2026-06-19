@@ -1,1 +1,142 @@
+:root{
+  --bg: #0f172a;
+  --panel: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --accent: #22d3ee;
+  --accent-2: #34d399;
+  --border: #374151;
+  --card: #1f2937;
+}
+*{box-sizing: border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+.app-header, .app-footer{
+  text-align:center;
+  padding: 16px 12px;
+}
+.subtitle{color: var(--muted); margin: 0.25rem 0 0}
+.container{
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+}
+.hidden{display:none}
+.controls{
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display:grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+}
+.controls label{font-size: 0.9rem; color: var(--muted)}
+.controls input, .controls select, .controls button{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+.controls .primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border: none;
+  color: #001219;
+  font-weight: 600;
+  cursor: pointer;
+}
+.controls .primary:hover{filter: brightness(1.05)}
+.game{
+  margin-top: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.status-bar{
+  display:flex; justify-content: space-between; align-items: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.current-item{display:flex; justify-content:center; margin: 16px 0}
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  min-width: 260px;
+  text-align: center;
+  font-size: 1.2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.slots{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+.slot{
+  background: #0b1220;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  min-height: 72px;
+  outline:none;
+}
+.slot:focus{border-color: var(--accent)}
+.slot-label{
+  display:inline-block;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.slot-item{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 10px;
+}
+.actions{
+  display:flex; gap: 10px; justify-content: center; margin-top: 14px;
+}
+.secondary{
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.secondary:hover{border-color: var(--accent)}
+.results{
+  margin-top: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.result-list{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 16px;
+}
+.result-list li{padding: 8px 0}
+.share{
+  display:grid; grid-template-columns: 1fr auto; gap: 8px;
+  margin-top: 10px;
+}
+@media (max-width: 720px){
+  .controls{grid-template-columns: 1fr; }
+  .slots{grid-template-columns: 1fr; }
+}
 
