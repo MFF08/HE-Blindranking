@@ -34,7 +34,7 @@ const state = {
 };
 
 // Refs
-const tabsWrap = qs('#categoryTabs');
+const categorySelect = qs('#category');
 const seedInput = qs('#seed');
 const startBtn = qs('#startBtn');
 const gameSection = qs('#gameSection');
@@ -49,7 +49,7 @@ const playAgainBtn = qs('#playAgain');
 const placeSkipBtn = qs('#placeSkip');
 const resetRoundBtn = qs('#resetRound');
 
-// Load categories and build tabs
+// Kategorien laden
 async function loadCategories() {
   try {
     const res = await fetch('data/categories.json', {cache: 'no-store'});
@@ -57,29 +57,30 @@ async function loadCategories() {
     const data = await res.json();
     state.categories = Array.isArray(data.categories) ? data.categories : [];
 
-    // Build tab buttons
-    tabsWrap.innerHTML = '';
-    state.categories.forEach((cat, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'tab-btn';
-      btn.setAttribute('role', 'tab');
-      btn.setAttribute('aria-selected', 'false');
-      btn.dataset.catId = cat.id;
-      btn.textContent = cat.title;
-      btn.addEventListener('click', () => selectCategory(cat.id));
-      tabsWrap.appendChild(btn);
+    // Dropdown füllen
+    categorySelect.innerHTML = '';
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.textContent = 'Bitte Kategorie wählen…';
+    placeholder.disabled = true;
+    placeholder.selected = true;
+    categorySelect.appendChild(placeholder);
+
+    state.categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat.id;
+      opt.textContent = cat.title;
+      categorySelect.appendChild(opt);
     });
 
-    // URL params
+    // URL-Params lesen
     const url = new URL(window.location.href);
     const catParam = url.searchParams.get('cat');
     const seedParam = url.searchParams.get('seed');
 
     if (catParam && state.categories.some(c => c.id === catParam)) {
-      selectCategory(catParam);
-    } else if (state.categories[0]) {
-      // optional: erste Kategorie vorwählen
-      selectCategory(state.categories[0].id);
+      categorySelect.value = catParam;
+      state.currentCategory = state.categories.find(c => c.id === catParam);
     }
     if (seedParam) seedInput.value = seedParam;
   } catch (e) {
@@ -88,27 +89,23 @@ async function loadCategories() {
   }
 }
 
-function selectCategory(catId) {
-  const cat = state.categories.find(c => c.id === catId);
-  if (!cat) return;
-  state.currentCategory = cat;
-
-  // Visual active
-  qsa('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b.dataset.catId === catId)));
-
-  // Update share link if seed present
-  if (state.seed) updateShareLink();
-}
-
 function startRound() {
-  if (!state.currentCategory) {
+  const catId = categorySelect.value;
+  if (!catId) {
     alert('Bitte zuerst eine Kategorie auswählen.');
+    categorySelect.focus();
     return;
   }
-  const seed = seedInput.value.trim() || (state.currentCategory.id + '-' + Date.now());
+  const cat = state.categories.find(c => c.id === catId);
+  if (!cat) {
+    alert('Ungültige Kategorie.');
+    return;
+  }
+  const seed = seedInput.value.trim() || (catId + '-' + Date.now());
+  state.currentCategory = cat;
   state.seed = seed;
 
-  const shuffled = seededShuffle(state.currentCategory.items, seed);
+  const shuffled = seededShuffle(cat.items, seed);
   state.items = shuffled.slice(0, 5);
   state.index = 0;
   state.slots = [null, null, null, null, null];
@@ -162,19 +159,19 @@ function placeInSlot(slotIndex) {
     // unchanged
   } else if (state.slots[slotIndex] == null) {
     state.slots[slotIndex] = item;
-    document.querySelectorAll('.slot-item')[slotIndex].textContent = item.label;
+    qsa('.slot-item')[slotIndex].textContent = item.label;
     state.index++;
   } else {
     const temp = state.slots[slotIndex];
     state.slots[slotIndex] = item;
-    document.querySelectorAll('.slot-item')[slotIndex].textContent = item.label;
+    qsa('.slot-item')[slotIndex].textContent = item.label;
 
     if (currentPos >= 0) {
       state.slots[currentPos] = temp;
-      document.querySelectorAll('.slot-item')[currentPos].textContent = temp.label;
+      qsa('.slot-item')[currentPos].textContent = temp.label;
       state.index++;
     } else {
-      state.items[state.index] = temp;
+      state.items[state.index] = temp; // displaced becomes current
     }
   }
 
@@ -190,7 +187,7 @@ function skipPlacement() {
   const freeIndex = state.slots.findIndex(x => x == null);
   if (freeIndex >= 0) {
     state.slots[freeIndex] = item;
-    document.querySelectorAll('.slot-item')[freeIndex].textContent = item.label;
+    qsa('.slot-item')[freeIndex].textContent = item.label;
     state.index++;
     if (state.index < 5) showNextItem(); else finishRound();
   } else {
@@ -231,7 +228,7 @@ copyLinkBtn.addEventListener('click', async () => {
 });
 placeSkipBtn.addEventListener('click', skipPlacement);
 resetRoundBtn.addEventListener('click', startRound);
-document.querySelectorAll('.slot').forEach(el => {
+qsa('.slot').forEach(el => {
   el.addEventListener('click', () => placeInSlot(Number(el.dataset.index)));
   el.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -243,4 +240,3 @@ document.querySelectorAll('.slot').forEach(el => {
 
 // Init
 loadCategories();
-
