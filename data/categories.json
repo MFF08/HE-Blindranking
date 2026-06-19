@@ -144,11 +144,11 @@
       "title": "Helmstedter Schulen",
       "items": [
         { "key": "gaboe", "label": "Gymnasium am Bötschenberg (GaBö)" },
-        { "key": "johanneum", "label": "Gymnasium Johanneum" },
+        { "key": "johanneum", "label": "Gymnasium Julianum" },
         { "key": "igs", "label": "IGS Helmstedt" },
         { "key": "bbs", "label": "BBS Helmstedt" },
-        { "key": "grundschule_1", "label": "Grundschule (Beispiel 1)" },
-        { "key": "grundschule_2", "label": "Grundschule (Beispiel 2)" }
+        { "key": "grundschule_1", "label": "Ludgeri Schule" },
+        { "key": "grundschule_2", "label": "Lessing Schule" }
       ]
     },
     {
