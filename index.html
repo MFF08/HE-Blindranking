@@ -14,14 +14,22 @@
   </header>
 
   <main class="container">
-    <section class="controls">
-      <label for="category">Kategorie</label>
-      <select id="category" aria-label="Kategorie auswählen"></select>
+    <section class="controls" role="region" aria-label="Einstellungen">
+      <div class="control-group">
+        <label for="category">Kategorie</label>
+        <select id="category" required aria-label="Kategorie auswählen">
+          <!-- wird per JS befüllt -->
+        </select>
+      </div>
 
-      <label for="seed">Seed (optional)</label>
-      <input id="seed" type="text" placeholder="z. B. HS-2026-A" />
+      <div class="control-group">
+        <label for="seed">Seed (optional)</label>
+        <input id="seed" type="text" placeholder="z. B. HS-2026-A" inputmode="text" />
+      </div>
 
-      <button id="startBtn" class="primary">Runde starten</button>
+      <div class="control-group control-start">
+        <button id="startBtn" class="primary" aria-label="Runde starten">Runde starten</button>
+      </div>
     </section>
 
     <section id="gameSection" class="game hidden" aria-live="polite">
@@ -34,7 +42,7 @@
         <div id="itemCard" class="card">Klicke „Runde starten“</div>
       </div>
 
-      <div class="slots">
+      <div class="slots" role="list" aria-label="Ranking-Slots">
         <div class="slot" data-index="0" tabindex="0" aria-label="Platz 1"><span class="slot-label">1</span><div class="slot-item"></div></div>
         <div class="slot" data-index="1" tabindex="0" aria-label="Platz 2"><span class="slot-label">2</span><div class="slot-item"></div></div>
         <div class="slot" data-index="2" tabindex="0" aria-label="Platz 3"><span class="slot-label">3</span><div class="slot-item"></div></div>
@@ -65,6 +73,7 @@
   </footer>
 
   <script>
+  // Utilities
   function seededRandom(seed) {
     let s = 1;
     for (let i = 0; i < seed.length; i++) {
@@ -87,6 +96,7 @@
   const qs = s => document.querySelector(s);
   const qsa = s => Array.from(document.querySelectorAll(s));
 
+  // State
   const state = {
     categories: [],
     currentCategory: null,
@@ -98,6 +108,7 @@
     finished: false
   };
 
+  // Refs
   const categorySelect = qs('#category');
   const seedInput = qs('#seed');
   const startBtn = qs('#startBtn');
@@ -115,174 +126,42 @@
   const resetRoundBtn = qs('#resetRound');
 
   async function loadCategories() {
-    const res = await fetch('data/categories.json', {cache: 'no-store'});
-    if (!res.ok) {
-      alert('Konnte Kategorien nicht laden.');
-      return;
-    }
-    const data = await res.json();
-    state.categories = data.categories || [];
-    categorySelect.innerHTML = '';
-    state.categories.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat.id;
-      opt.textContent = cat.title;
-      categorySelect.appendChild(opt);
-    });
+    try {
+      const res = await fetch('data/categories.json', {cache: 'no-store'});
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      state.categories = Array.isArray(data.categories) ? data.categories : [];
 
-    const url = new URL(window.location.href);
-    const catParam = url.searchParams.get('cat');
-    const seedParam = url.searchParams.get('seed');
-    if (catParam && state.categories.some(c => c.id === catParam)) {
-      categorySelect.value = catParam;
+      // Dropdown füllen (Pflichtfeld)
+      categorySelect.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Bitte Kategorie wählen…';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      categorySelect.appendChild(placeholder);
+
+      state.categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat.id;
+        opt.textContent = cat.title;
+        categorySelect.appendChild(opt);
+      });
+
+      // URL-Params lesen
+      const url = new URL(window.location.href);
+      const catParam = url.searchParams.get('cat');
+      const seedParam = url.searchParams.get('seed');
+
+      if (catParam && state.categories.some(c => c.id === catParam)) {
+        categorySelect.value = catParam;
+      }
+      if (seedParam) seedInput.value = seedParam;
+    } catch (e) {
+      console.error(e);
+      alert('Kategorien konnten nicht geladen werden. Stelle sicher, dass data/categories.json existiert.');
     }
-    if (seedParam) seedInput.value = seedParam;
   }
 
   function startRound() {
-    const catId = categorySelect.value;
-    const cat = state.categories.find(c => c.id === catId);
-    if (!cat) {
-      alert('Bitte eine Kategorie wählen.');
-      return;
-    }
-    const seed = seedInput.value.trim() || (catId + '-' + Date.now());
-    state.currentCategory = cat;
-    state.seed = seed;
-
-    const shuffled = seededShuffle(cat.items, seed);
-    state.items = shuffled.slice(0, 5);
-    state.index = 0;
-    state.slots = [null, null, null, null, null];
-    state.finished = false;
-    state.startTime = performance.now();
-
-    itemCard.textContent = 'Bereit…';
-    qsa('.slot-item').forEach(el => el.textContent = '');
-    updateProgress();
-    gameSection.classList.remove('hidden');
-    resultSection.classList.add('hidden');
-
-    showNextItem();
-    updateShareLink();
-  }
-
-  function updateShareLink() {
-    const url = new URL(window.location.href);
-    url.searchParams.set('cat', state.currentCategory.id);
-    url.searchParams.set('seed', state.seed);
-    shareLink.value = url.toString();
-  }
-
-  function updateProgress() {
-    progressEl.textContent = `Item ${Math.min(state.index, 5)}/5`;
-    if (!state.finished) {
-      const elapsed = (performance.now() - state.startTime) / 1000;
-      timeEl.textContent = `Zeit: ${elapsed.toFixed(1)}s`;
-    }
-  }
-
-  function showNextItem() {
-    if (state.index >= state.items.length) {
-      finishRound();
-      return;
-    }
-    const item = state.items[state.index];
-    itemCard.textContent = item.label;
-    itemCard.dataset.key = item.key;
-    updateProgress();
-  }
-
-  function placeInSlot(slotIndex) {
-    if (state.finished) return;
-    if (state.index >= state.items.length) return;
-
-    const item = state.items[state.index];
-    const currentPos = state.slots.findIndex(x => x && x.key === item.key);
-
-    if (currentPos === slotIndex) {
-    } else if (state.slots[slotIndex] == null) {
-      state.slots[slotIndex] = item;
-      qsa('.slot-item')[slotIndex].textContent = item.label;
-      state.index++;
-    } else {
-      const temp = state.slots[slotIndex];
-      state.slots[slotIndex] = item;
-      qsa('.slot-item')[slotIndex].textContent = item.label;
-
-      if (currentPos >= 0) {
-        state.slots[currentPos] = temp;
-        qsa('.slot-item')[currentPos].textContent = temp.label;
-        state.index++;
-      } else {
-        state.items[state.index] = temp;
-      }
-    }
-
-    if (state.index < 5) {
-      showNextItem();
-    } else {
-      finishRound();
-    }
-  }
-
-  function skipPlacement() {
-    const item = state.items[state.index];
-    const freeIndex = state.slots.findIndex(x => x == null);
-    if (freeIndex >= 0) {
-      state.slots[freeIndex] = item;
-      qsa('.slot-item')[freeIndex].textContent = item.label;
-      state.index++;
-      if (state.index < 5) showNextItem(); else finishRound();
-    } else {
-      placeInSlot(4);
-    }
-  }
-
-  function finishRound() {
-    state.finished = true;
-    const elapsed = (performance.now() - state.startTime) / 1000;
-    timeEl.textContent = `Zeit: ${elapsed.toFixed(1)}s`;
-    renderResults();
-    gameSection.classList.add('hidden');
-    resultSection.classList.remove('hidden');
-  }
-
-  function renderResults() {
-    resultList.innerHTML = '';
-    state.slots.forEach((item, idx) => {
-      const li = document.createElement('li');
-      li.textContent = item ? `${idx + 1}. ${item.label}` : `${idx + 1}. –`;
-      resultList.appendChild(li);
-    });
-  }
-
-  startBtn.addEventListener('click', startRound);
-  playAgainBtn.addEventListener('click', () => startRound());
-  copyLinkBtn.addEventListener('click', async () => {
-    shareLink.select();
-    try {
-      await navigator.clipboard.writeText(shareLink.value);
-      copyLinkBtn.textContent = 'Kopiert!';
-      setTimeout(() => copyLinkBtn.textContent = 'Link kopieren', 1500);
-    } catch {
-      document.execCommand('copy');
-    }
-  });
-  placeSkipBtn.addEventListener('click', skipPlacement);
-  resetRoundBtn.addEventListener('click', startRound);
-  qsa('.slot').forEach(el => {
-    el.addEventListener('click', () => placeInSlot(Number(el.dataset.index)));
-    el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        placeInSlot(Number(el.dataset.index));
-      }
-    });
-  });
-
-  loadCategories();
-  </script>
-</body>
-</html>
-
+    const catId = categorySelect.value
